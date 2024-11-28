@@ -4,7 +4,7 @@ class DatabaseHelper:
     def __init__(self, url: str, echo: bool = False):
         self.engine = create_async_engine(url=url, echo=echo)
         self.session = async_sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
-    
+
     async def dispose(self):
         await self.engine.dispose()
 

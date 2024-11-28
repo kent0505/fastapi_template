@@ -1,7 +1,13 @@
-from fastapi import APIRouter, HTTPException, Depends
-from routers import AsyncSession, db_helper, select, Order, OrderAddBody, get_timestamp
+from routers import *
 
 router = APIRouter()
+
+class _BodyAdd(BaseModel):
+    amount:  int = 1
+    uid:     int
+    pid:     int
+    address: str = "41.315166, 69.243769"
+    notes:   str = ""
 
 @router.get("/{id}")
 async def get_orders(id: int, db: AsyncSession = Depends(db_helper.get_db)):
@@ -9,27 +15,27 @@ async def get_orders(id: int, db: AsyncSession = Depends(db_helper.get_db)):
     orders = await db.scalars(select(Order).filter(Order.uid == id))
     for order in orders:
         data.append({
-            "id": order.id,
-            "amount": order.amount,
-            "date": order.date,
-            "uid": order.uid,
-            "pid": order.pid,
+            "id":      order.id,
+            "amount":  order.amount,
+            "date":    order.date,
+            "uid":     order.uid,
+            "pid":     order.pid,
             "address": order.address,
-            "status": order.status,
-            "notes": order.notes,
+            "status":  order.status,
+            "notes":   order.notes,
         })
     return {"orders": data}
 
 @router.post("/")
-async def add_order(body: OrderAddBody, db: AsyncSession = Depends(db_helper.get_db)):
+async def add_order(body: _BodyAdd, db: AsyncSession = Depends(db_helper.get_db)):
     db.add(Order(
-        amount = body.amount,
-        date = get_timestamp(),
-        uid = body.uid,
-        pid = body.pid,
+        amount  = body.amount,
+        date    = get_timestamp(),
+        uid     = body.uid,
+        pid     = body.pid,
         address = body.address,
-        status = "in progress",
-        notes = body.notes,
+        status  = "in progress",
+        notes   = body.notes,
     ))
     await db.commit()
     return {"message": "order added"}
