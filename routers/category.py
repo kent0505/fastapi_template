@@ -1,21 +1,11 @@
-from fastapi                import APIRouter, HTTPException, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from core.schemas           import CategoryAddBody, CategoryUpdateBody
-from database.db_helper     import db_helper
-from database.db            import (
-    db_get_categories, 
-    db_get_category_by_id, 
-    db_add_category, 
-    db_edit_category, 
-    db_delete_category,
-)
+from routers import APIRouter, HTTPException, Depends, AsyncSession, Category, select, db_helper
 
 router = APIRouter()
 
 @router.get("/")
 async def get_categories(db: AsyncSession = Depends(db_helper.get_db)):
     data = []
-    categories = await db_get_categories(db)
+    categories = await db.scalars(select(Category))
     for category in categories:
         data.append({
             "id":    category.id,
@@ -24,22 +14,29 @@ async def get_categories(db: AsyncSession = Depends(db_helper.get_db)):
     return {"categories": data}
 
 @router.post("/")
-async def add_category(body: CategoryAddBody, db: AsyncSession = Depends(db_helper.get_db)):
-    await db_add_category(db, body)
+async def add_category(title: str, db: AsyncSession = Depends(db_helper.get_db)):
+    db.add(Category(title=title))
+    await db.commit()
     return {"message": "category added"}
 
-@router.put("/")
-async def edit_category(body: CategoryUpdateBody, db: AsyncSession = Depends(db_helper.get_db)):
-    category = await db_get_category_by_id(db, body.id)
+@router.put("/{id}")
+async def edit_category(
+    id: int, 
+    title: str, 
+    db: AsyncSession = Depends(db_helper.get_db)
+):
+    category = await db.scalar(select(Category).filter(Category.id == id))
     if category:
-        await db_edit_category(db, category, body)
+        category.title = title
+        await db.commit()
         return {"message": "category updated"}
     raise HTTPException(404, "id not found")
 
 @router.delete("/{id}")
 async def delete_category(id: int, db: AsyncSession = Depends(db_helper.get_db)):
-    category = await db_get_category_by_id(db, id)
+    category = await db.scalar(select(Category).filter(Category.id == id))
     if category:
-        await db_delete_category(db, category)
+        await db.delete(category)
+        await db.commit()
         return {"message": "category deleted"}
     raise HTTPException(404, "id not found")

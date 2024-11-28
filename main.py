@@ -50,4 +50,4 @@ app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"],   
 # pip install -r requirements.txt
 # uvicorn main:app --reload
 # cd Desktop/backend/fastapi && venv\Scripts\activate
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwaXJ5IjoxNzMzNDAzMjg2fQ.SsaVF1-ywCI--lzECX4fHanCtZH21sEwwtVQuCgtPvw
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZXhwaXJ5IjoxNzMzNDA4MzA3fQ.vcX_KteifYsO5qDL9Qbs_3z4x66RYO-v6mJn2Cm9ZKs

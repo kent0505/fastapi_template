@@ -5,9 +5,13 @@ from core.settings    import settings
 import bcrypt
 import jwt
 
-def signJWT(id: int):
+def signJWT(id: int, role: str):
     return jwt.encode(
-        payload   = {"id": id, "expiry": settings.jwt_expiry}, 
+        payload   = {
+            "id":     id, 
+            "role":   role,
+            "expiry": settings.jwt_expiry
+        }, 
         key       = settings.jwt_key, 
         algorithm = settings.jwt_algorithm
     )
@@ -32,6 +36,23 @@ def check_password(password1: str, password2: str):
     except:
         return False
 
+# class AdminJWTBearer(HTTPBearer):
+#     def __init__(self, auto_error: bool = True):
+#         super(AdminJWTBearer, self).__init__(auto_error=auto_error)
+#     async def __call__(self, request: Request):
+#         credentials: HTTPAuthorizationCredentials = await super(AdminJWTBearer, self).__call__(request)
+#         if not credentials.scheme == "Bearer":
+#             raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+#         if not self.verify_jwt(credentials.credentials, "admin"):
+#             raise HTTPException(status_code=403, detail="Invalid or expired token.")
+#         return credentials.credentials
+#     def verify_jwt(self, token: str, role: str) -> bool:
+#         try:
+#             payload = decodeJWT(token)
+#         except:
+#             payload = None
+#         return payload and payload.get("role") == role
+
 class JWTBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
@@ -39,15 +60,12 @@ class JWTBearer(HTTPBearer):
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if not credentials.scheme == "Bearer":
             raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
-        if not self.verify_jwt(credentials.credentials):
+        if not self.verify_jwt(credentials.credentials, "user"):
             raise HTTPException(status_code=403, detail="Invalid or expired token.")
         return credentials.credentials
-    def verify_jwt(self, jwtoken: str) -> bool:
-        isTokenValid: bool = False
+    def verify_jwt(self, token: str, role: str) -> bool:
         try:
-            payload = decodeJWT(jwtoken)
-        except: 
+            payload = decodeJWT(token)
+        except:
             payload = None
-        if payload: 
-            isTokenValid = True
-        return isTokenValid
+        return payload and payload.get("role") == role or payload.get("role") == "admin"

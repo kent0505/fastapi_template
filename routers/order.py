@@ -1,56 +1,44 @@
-from fastapi                import APIRouter, HTTPException, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from core.schemas           import OrderAddBody
-from typing                 import Literal
-from database.db_helper     import db_helper
-from database.db            import (
-    db_get_orders, 
-    db_get_order_by_id, 
-    db_add_order, 
-    db_edit_order, 
-    db_delete_order,
-) 
+from fastapi import APIRouter, HTTPException, Depends
+from routers import AsyncSession, db_helper, select, Order, OrderAddBody, get_timestamp
 
 router = APIRouter()
 
-@router.get("/")
-async def get_orders(db: AsyncSession = Depends(db_helper.get_db)):
+@router.get("/{id}")
+async def get_orders(id: int, db: AsyncSession = Depends(db_helper.get_db)):
     data = []
-    orders = await db_get_orders(db)
+    orders = await db.scalars(select(Order).filter(Order.uid == id))
     for order in orders:
         data.append({
-            "id":      order.id,
-            "amount":  order.amount,
-            "date":    order.date,
-            "uid":     order.uid,
-            "pid":     order.pid,
+            "id": order.id,
+            "amount": order.amount,
+            "date": order.date,
+            "uid": order.uid,
+            "pid": order.pid,
             "address": order.address,
-            "status":  order.status,
-            "notes":   order.notes,
+            "status": order.status,
+            "notes": order.notes,
         })
     return {"orders": data}
 
 @router.post("/")
 async def add_order(body: OrderAddBody, db: AsyncSession = Depends(db_helper.get_db)):
-    await db_add_order(db, body)
+    db.add(Order(
+        amount = body.amount,
+        date = get_timestamp(),
+        uid = body.uid,
+        pid = body.pid,
+        address = body.address,
+        status = "in progress",
+        notes = body.notes,
+    ))
+    await db.commit()
     return {"message": "order added"}
-
-@router.put("/{id}")
-async def edit_order(
-    id:     int, 
-    status: Literal["in progress", "completed", "cancelled"],
-    db:     AsyncSession = Depends(db_helper.get_db)
-):
-    order = await db_get_order_by_id(db, id)
-    if order:
-        await db_edit_order(db, order, status)
-        return {"message": "order updated"}
-    raise HTTPException(404, "id not found")
 
 @router.delete("/{id}")
 async def delete_order(id: int, db: AsyncSession = Depends(db_helper.get_db)):
-    order = await db_get_order_by_id(db, id)
+    order = await db.scalar(select(Order).filter(Order.id == id))
     if order:
-        await db_delete_order(db, order)
+        await db.delete(order)
+        await db.commit()
         return {"message": "order deleted"}
     raise HTTPException(404, "id not found")

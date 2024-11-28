@@ -1,12 +1,6 @@
 from pydantic import BaseModel
 
 # user
-class UserLoginBody(BaseModel):
-    username: str = "otaw"
-    password: str = "123"
-class UserRegisterBody(BaseModel):
-    username: str = "otaw"
-    password: str = "123"
 class UserUpdateBody(BaseModel):
     username:     str = "otaw"
     password:     str = "123"
@@ -17,13 +11,6 @@ class UserUpdateBody(BaseModel):
 class TestAddBody(BaseModel):
     title: str
 class TestUpdateBody(BaseModel):
-    id:    int
-    title: str
-
-# category
-class CategoryAddBody(BaseModel):
-    title: str
-class CategoryUpdateBody(BaseModel):
     id:    int
     title: str
 
