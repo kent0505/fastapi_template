@@ -2,6 +2,7 @@ from fastapi                   import FastAPI
 from fastapi.middleware.cors   import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from http                      import HTTPStatus
+from core.settings             import settings
 import logging
 
 class LogMiddleware(BaseHTTPMiddleware):
@@ -21,9 +22,9 @@ class LogMiddleware(BaseHTTPMiddleware):
 def setup_middlewares(app: FastAPI):
     # app.add_middleware(LogMiddleware)
     app.add_middleware(
-        middleware_class=CORSMiddleware,
-        allow_origins=["https://localhost:8000", "https://www.localhost:8000"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        middleware_class  = CORSMiddleware,
+        allow_origins     = settings.allow_origins,
+        allow_credentials = True,
+        allow_methods     = ["*"],
+        allow_headers     = ["*"],
     )

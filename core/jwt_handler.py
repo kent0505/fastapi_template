@@ -1,27 +1,25 @@
 from fastapi          import Request, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from core.utils       import get_timestamp
+from core.settings    import settings
 import bcrypt
 import jwt
-import time
 
 def signJWT(id: int):
     return jwt.encode(
-        payload   = {
-            "id":     id, 
-            "expiry": time.time() + 60 * 60 * 168
-        }, 
-        key       = "abc",
-        algorithm = "HS256",
+        payload   = {"id": id, "expiry": settings.jwt_expiry}, 
+        key       = settings.jwt_key, 
+        algorithm = settings.jwt_algorithm
     )
 
 def decodeJWT(token: str) -> dict:
     try:
-        decoded = jwt.decode(
+        decoded: dict = jwt.decode(
             jwt        = token, 
-            key        = "abc", 
-            algorithms = ["HS256"]
+            key        = settings.jwt_key, 
+            algorithms = [settings.jwt_algorithm]
         )
-        return decoded if decoded["expiry"] >= time.time() else None
+        return decoded if decoded["expiry"] >= get_timestamp() else None
     except:
         return {}
 
