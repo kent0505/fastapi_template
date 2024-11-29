@@ -1,6 +1,5 @@
 from routers          import *
 from core.jwt_handler import *
-from typing           import Literal
 
 router = APIRouter()
 
@@ -43,6 +42,25 @@ async def register(
     ))
     await db.commit()
     return {"message": f"new {role} added"}
+
+@router.put("/", dependencies=[Depends(JWTBearer(role="admin"))])
+async def edit_admin(
+    body: _BodyEdit, 
+    db:   AsyncSession = Depends(db_helper.get_db)
+):
+    user = await db.scalar(select(User).filter(User.username == body.username))
+    if not user:
+        raise HTTPException(404, "user not found")
+    if body.new_username != "" or body.new_password != "":
+        hashed = check_password(body.password, user.password)
+        if hashed:
+            body.new_password = hash_password(body.new_password)
+            user.username     = body.new_username
+            user.password     = body.new_password
+            await db.commit()
+            return {"message": "user updated"}
+        raise HTTPException(401, "username or password invalid")
+    raise HTTPException(404, "user not found")
 
 @router.put("/", dependencies=[Depends(JWTBearer())])
 async def edit_user(

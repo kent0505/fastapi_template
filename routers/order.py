@@ -9,10 +9,10 @@ class _BodyAdd(BaseModel):
     address: str = "41.315166, 69.243769"
     notes:   str = ""
 
-@router.get("/{id}")
-async def get_orders(id: int, db: AsyncSession = Depends(db_helper.get_db)):
+@router.get("/{uid}")
+async def get_orders(uid: int, db: AsyncSession = Depends(db_helper.get_db)):
     data = []
-    orders = await db.scalars(select(Order).filter(Order.uid == id))
+    orders = await db.scalars(select(Order).filter(Order.uid == uid))
     for order in orders:
         data.append({
             "id":      order.id,

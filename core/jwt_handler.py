@@ -36,36 +36,29 @@ def check_password(password1: str, password2: str):
     except:
         return False
 
-# class AdminJWTBearer(HTTPBearer):
-#     def __init__(self, auto_error: bool = True):
-#         super(AdminJWTBearer, self).__init__(auto_error=auto_error)
-#     async def __call__(self, request: Request):
-#         credentials: HTTPAuthorizationCredentials = await super(AdminJWTBearer, self).__call__(request)
-#         if not credentials.scheme == "Bearer":
-#             raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
-#         if not self.verify_jwt(credentials.credentials, "admin"):
-#             raise HTTPException(status_code=403, detail="Invalid or expired token.")
-#         return credentials.credentials
-#     def verify_jwt(self, token: str, role: str) -> bool:
-#         try:
-#             payload = decodeJWT(token)
-#         except:
-#             payload = None
-#         return payload and payload.get("role") == role
-
 class JWTBearer(HTTPBearer):
-    def __init__(self, auto_error: bool = True):
+    def __init__(self, auto_error: bool = True, role: str = "user"):
         super(JWTBearer, self).__init__(auto_error=auto_error)
+        self.role = role
     async def __call__(self, request: Request):
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if not credentials.scheme == "Bearer":
             raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
-        if not self.verify_jwt(credentials.credentials, "user"):
+        if not self.verify_jwt(credentials.credentials):
+            raise HTTPException(status_code=403, detail="Invalid or expired token.")
+        if self.role and not self.has_required_role(credentials.credentials, self.role):
             raise HTTPException(status_code=403, detail="Invalid or expired token.")
         return credentials.credentials
-    def verify_jwt(self, token: str, role: str) -> bool:
+    def verify_jwt(self, token: str) -> bool:
         try:
             payload = decodeJWT(token)
         except:
             payload = None
-        return payload and payload.get("role") == role or payload.get("role") == "admin"
+        return payload is not None
+    def has_required_role(self, token: str, role: str) -> bool:
+        try:
+            payload = decodeJWT(token)
+            user_role = payload.get("role", "")
+            return user_role == role
+        except Exception:
+            return False

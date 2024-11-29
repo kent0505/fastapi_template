@@ -10,9 +10,9 @@ class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
 
 class User(Base):
-    username: Mapped[str]  = mapped_column(nullable=False, unique=True)
-    password: Mapped[str]  = mapped_column(nullable=False)
-    role:     Mapped[str]  = mapped_column(nullable=False)
+    username: Mapped[str] = mapped_column(nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(nullable=False)
+    role:     Mapped[str] = mapped_column(nullable=False)
 
 class Test(Base):
     title: Mapped[str] = mapped_column(nullable=False)
