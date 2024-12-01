@@ -1,9 +1,9 @@
 from fastapi              import FastAPI, Depends
 from fastapi.staticfiles  import StaticFiles
 
+from src.core.jwt_handler import JWTBearer
 from src.core.middlewares import setup_middlewares
 from src.core.utils       import lifespan
-from src.core.jwt_handler import JWTBearer
 from src.core.settings    import settings
 from src.routers.user     import router as user_router
 from src.routers.test     import router as test_router
@@ -18,8 +18,8 @@ app = FastAPI(
 
 setup_middlewares(app)
 
-# app.mount(app=StaticFiles(directory="../static"),    path="/static")
-# app.mount(app=StaticFiles(directory="../templates"), path="/templates")
+app.mount(app=StaticFiles(directory="static"),    path="/static")
+app.mount(app=StaticFiles(directory="templates"), path="/templates")
 
 app.include_router(user_router,     prefix="/api/v1/user",     tags=["User"])
 app.include_router(category_router, prefix="/api/v1/category", tags=["Category"], dependencies=[Depends(JWTBearer())])

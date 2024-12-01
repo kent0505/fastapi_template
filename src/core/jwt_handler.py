@@ -7,7 +7,7 @@ from src.core.settings import settings
 import bcrypt
 import jwt
 
-def signJWT(id: int, role: str):
+def signJWT(id: int, role: str) -> str:
     return jwt.encode(
         payload   = {
             "id":     id, 
@@ -29,10 +29,10 @@ def decodeJWT(token: str) -> dict:
     except:
         return {}
 
-def hash_password(password: str):
+def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode()
 
-def check_password(password1: str, password2: str):
+def check_password(password1: str, password2: str) -> bool:
     try:
         return bcrypt.checkpw(password1.encode("utf-8"), password2.encode("utf-8"))
     except:
