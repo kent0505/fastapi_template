@@ -1,33 +1,30 @@
-from routers import *
+from src.routers import *
 
 router = APIRouter()
 
-class _BodyAdd(BaseModel):
-    title: str
-class _BodyEdit(BaseModel):
-    id:    int
+class _Body(BaseModel):
     title: str
 
 @router.get("/")
 async def get_tests(db: AsyncSession = Depends(db_helper.get_db)):
-    data = []
     tests = await db.scalars(select(Test))
-    for test in tests:
-        data.append({
+    return {"tests": [
+        {
             "id":    test.id,
             "title": test.title,
-        })
-    return {"tests": data}
+        } 
+        for test in tests
+    ]}
 
 @router.post("/")
-async def add_test(body: _BodyAdd, db: AsyncSession = Depends(db_helper.get_db)):
+async def add_test(body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
     db.add(Test(title=body.title))
     await db.commit()
     return {"message": "test added"}
 
-@router.put("/")
-async def edit_test(body: _BodyEdit, db: AsyncSession = Depends(db_helper.get_db)):
-    test = await db.scalar(select(Test).filter(Test.id == body.id))
+@router.put("/{id}")
+async def edit_test(id: int, body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
+    test = await db.scalar(select(Test).filter(Test.id == id))
     if test:
         test.title = body.title
         await db.commit()

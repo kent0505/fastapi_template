@@ -1,8 +1,10 @@
-from fastapi            import FastAPI
-from contextlib         import asynccontextmanager
-from dotenv             import load_dotenv
-from database.base      import Base
-from database.db_helper import db_helper
+from fastapi                import FastAPI
+from contextlib             import asynccontextmanager
+from dotenv                 import load_dotenv
+
+from src.database.base      import Base
+from src.database.db_helper import db_helper
+
 import time
 import logging
 

@@ -1,8 +1,8 @@
-from routers import *
+from src.routers import *
 
 router = APIRouter()
 
-class _BodyAdd(BaseModel):
+class _Body(BaseModel):
     amount:  int = 1
     uid:     int
     pid:     int
@@ -11,10 +11,9 @@ class _BodyAdd(BaseModel):
 
 @router.get("/{uid}")
 async def get_orders(uid: int, db: AsyncSession = Depends(db_helper.get_db)):
-    data = []
     orders = await db.scalars(select(Order).filter(Order.uid == uid))
-    for order in orders:
-        data.append({
+    return {"orders": [
+        {
             "id":      order.id,
             "amount":  order.amount,
             "date":    order.date,
@@ -23,11 +22,14 @@ async def get_orders(uid: int, db: AsyncSession = Depends(db_helper.get_db)):
             "address": order.address,
             "status":  order.status,
             "notes":   order.notes,
-        })
-    return {"orders": data}
+        } 
+        for order in orders
+    ]}
 
 @router.post("/")
-async def add_order(body: _BodyAdd, db: AsyncSession = Depends(db_helper.get_db)):
+async def add_order(body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
+    if (body.uid or body.pid == 0):
+        raise HTTPException(404, "invalid uid or pid")
     db.add(Order(
         amount  = body.amount,
         date    = get_timestamp(),

@@ -1,17 +1,19 @@
-from fastapi             import FastAPI, Depends
-from fastapi.staticfiles import StaticFiles
-from core.middlewares    import setup_middlewares
-from core.utils          import lifespan
-from core.jwt_handler    import JWTBearer
-from routers.user        import router as user_router
-from routers.test        import router as test_router
-from routers.category    import router as category_router
-from routers.product     import router as product_router
-from routers.order       import router as order_router
+from fastapi              import FastAPI, Depends
+from fastapi.staticfiles  import StaticFiles
+
+from src.core.middlewares import setup_middlewares
+from src.core.utils       import lifespan
+from src.core.jwt_handler import JWTBearer
+from src.core.settings    import settings
+from src.routers.user     import router as user_router
+from src.routers.test     import router as test_router
+from src.routers.category import router as category_router
+from src.routers.product  import router as product_router
+from src.routers.order    import router as order_router
 
 app = FastAPI(
     lifespan=lifespan,
-    swagger_ui_parameters={"defaultModelsExpandDepth": -1},
+    swagger_ui_parameters=settings.swagger_ui_parameters,
 )
 
 setup_middlewares(app)
@@ -29,4 +31,11 @@ app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"],   
 # uvicorn main:app --reload
 # sudo lsof -t -i tcp:8000 | xargs kill -9
 # cd Desktop/backend/fastapi && venv\Scripts\activate
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZXhwaXJ5IjoxNzMzNDA4MzA3fQ.vcX_KteifYsO5qDL9Qbs_3z4x66RYO-v6mJn2Cm9ZKs
+
+# alembic init -t async migrations
+# (migrations/env.py) from database.base import * 
+# (migrations/env.py) target_metadata = Base.metadata
+# (alembic.ini) sqlalchemy.url = sqlite+aiosqlite:///sqlite.db
+# alembic revision --autogenerate -m "init"
+# alembic upgrade head
+# alembic stamp head

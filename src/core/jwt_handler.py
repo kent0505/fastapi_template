@@ -1,7 +1,9 @@
-from fastapi          import Request, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from core.utils       import get_timestamp
-from core.settings    import settings
+from fastapi           import Request, HTTPException
+from fastapi.security  import HTTPAuthorizationCredentials, HTTPBearer
+
+from src.core.utils    import get_timestamp
+from src.core.settings import settings
+
 import bcrypt
 import jwt
 
@@ -41,14 +43,14 @@ class JWTBearer(HTTPBearer):
         super(JWTBearer, self).__init__(auto_error=auto_error)
         self.role = role
     async def __call__(self, request: Request):
-        credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
-        if not credentials.scheme == "Bearer":
+        token: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
+        if not token.scheme == "Bearer":
             raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
-        if not self.verify_jwt(credentials.credentials):
+        if not self.verify_jwt(token.credentials):
             raise HTTPException(status_code=403, detail="Invalid or expired token.")
-        if self.role and not self.has_required_role(credentials.credentials, self.role):
+        if not self.has_required_role(token.credentials, self.role):
             raise HTTPException(status_code=403, detail="Invalid or expired token.")
-        return credentials.credentials
+        return token.credentials
     def verify_jwt(self, token: str) -> bool:
         try:
             payload = decodeJWT(token)
@@ -59,6 +61,6 @@ class JWTBearer(HTTPBearer):
         try:
             payload = decodeJWT(token)
             user_role = payload.get("role", "")
-            return user_role == role
+            return user_role == role or user_role == "admin"
         except Exception:
             return False

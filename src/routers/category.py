@@ -1,17 +1,17 @@
-from routers import *
+from src.routers import *
 
 router = APIRouter()
 
 @router.get("/")
 async def get_categories(db: AsyncSession = Depends(db_helper.get_db)):
-    data = []
     categories = await db.scalars(select(Category))
-    for category in categories:
-        data.append({
+    return {"categories": [
+        {
             "id":    category.id,
             "title": category.title,
-        })
-    return {"categories": data}
+        } 
+        for category in categories
+    ]}
 
 @router.post("/")
 async def add_category(title: str, db: AsyncSession = Depends(db_helper.get_db)):

@@ -21,10 +21,11 @@ class Category(Base):
     title: Mapped[str] = mapped_column(nullable=False)
 
 class Product(Base):
-    title: Mapped[str] = mapped_column(nullable=False)
-    price: Mapped[int] = mapped_column(nullable=False)
-    iid:   Mapped[int] = mapped_column(nullable=False) # image id
-    cid:   Mapped[int] = mapped_column(nullable=False) # category id
+    title:       Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=False)
+    image:       Mapped[str] = mapped_column(nullable=False) # image id
+    price:       Mapped[int] = mapped_column(nullable=False)
+    cid:         Mapped[int] = mapped_column(nullable=False) # category id
 
 class Order(Base):
     amount:  Mapped[int] = mapped_column(nullable=False)

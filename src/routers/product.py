@@ -1,51 +1,45 @@
-from routers import *
+from src.routers import *
 
 router = APIRouter()
 
-class _BodyAdd(BaseModel):
+class _Body(BaseModel):
     title: str
+    image: str
     price: int
-    iid:   int
-    cid:   int
-class _BodyEdit(BaseModel):
-    id:    int
-    title: str
-    price: int
-    iid:   int
     cid:   int
 
 @router.get("/")
 async def get_products(db: AsyncSession = Depends(db_helper.get_db)):
-    data = []
     products = await db.scalars(select(Product))
-    for product in products:
-        data.append({
+    return {"products": [
+        {
             "id":    product.id,
             "title": product.title,
+            "image": product.image,
             "price": product.price,
-            "iid":   product.iid,
             "cid":   product.cid,
-        })
-    return {"products": data}
+        } 
+        for product in products
+    ]}
 
 @router.post("/")
-async def add_product(body: _BodyAdd, db: AsyncSession = Depends(db_helper.get_db)):
+async def add_product(body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
     db.add(Product(
         title = body.title,
+        image = body.image,
         price = body.price,
-        iid   = body.iid,
         cid   = body.cid,
     ))
     await db.commit()
     return {"message": "product added"}
 
-@router.put("/")
-async def edit_product(body: _BodyEdit, db: AsyncSession = Depends(db_helper.get_db)):
-    product = await db.scalar(select(Product).filter(Product.id == body.id))
+@router.put("/{id}")
+async def edit_product(id: int, body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
+    product = await db.scalar(select(Product).filter(Product.id == id))
     if product:
         product.title = body.title
+        product.image = body.image
         product.price = body.price
-        product.iid   = body.iid
         product.cid   = body.cid
         await db.commit()
         return {"message": "product updated"}
