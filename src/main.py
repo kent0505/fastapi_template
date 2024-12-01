@@ -26,16 +26,3 @@ app.include_router(category_router, prefix="/api/v1/category", tags=["Category"]
 app.include_router(product_router,  prefix="/api/v1/product",  tags=["Product"],  dependencies=[Depends(JWTBearer())])
 app.include_router(order_router,    prefix="/api/v1/order",    tags=["Order"],    dependencies=[Depends(JWTBearer())])
 app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"],     dependencies=[Depends(JWTBearer())])
-
-# pip install -r requirements.txt
-# uvicorn main:app --reload
-# sudo lsof -t -i tcp:8000 | xargs kill -9
-# cd Desktop/backend/fastapi && venv\Scripts\activate
-
-# alembic init -t async migrations
-# (migrations/env.py) from database.base import * 
-# (migrations/env.py) target_metadata = Base.metadata
-# (alembic.ini) sqlalchemy.url = sqlite+aiosqlite:///sqlite.db
-# alembic revision --autogenerate -m "init"
-# alembic upgrade head
-# alembic stamp head
