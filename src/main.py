@@ -1,7 +1,6 @@
 from fastapi              import FastAPI, Depends
 from fastapi.staticfiles  import StaticFiles
 
-from src.core.jwt_handler import JWTBearer
 from src.core.middlewares import setup_middlewares
 from src.core.utils       import lifespan
 from src.core.settings    import settings
@@ -22,7 +21,7 @@ app.mount(app=StaticFiles(directory="static"),    path="/static")
 app.mount(app=StaticFiles(directory="templates"), path="/templates")
 
 app.include_router(user_router,     prefix="/api/v1/user",     tags=["User"])
-app.include_router(category_router, prefix="/api/v1/category", tags=["Category"], dependencies=[Depends(JWTBearer())])
-app.include_router(product_router,  prefix="/api/v1/product",  tags=["Product"],  dependencies=[Depends(JWTBearer())])
-app.include_router(order_router,    prefix="/api/v1/order",    tags=["Order"],    dependencies=[Depends(JWTBearer())])
-app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"],     dependencies=[Depends(JWTBearer())])
+app.include_router(category_router, prefix="/api/v1/category", tags=["Category"])
+app.include_router(product_router,  prefix="/api/v1/product",  tags=["Product"])
+app.include_router(order_router,    prefix="/api/v1/order",    tags=["Order"])
+app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"])

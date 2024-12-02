@@ -39,7 +39,7 @@ def check_password(password1: str, password2: str) -> bool:
         return False
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, auto_error: bool = True, role: str = "user"):
+    def __init__(self, auto_error: bool = True, role: str = "admin"):
         super(JWTBearer, self).__init__(auto_error=auto_error)
         self.role = role
     async def __call__(self, request: Request):

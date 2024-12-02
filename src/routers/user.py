@@ -53,7 +53,7 @@ async def register_user(
     await db.commit()
     return {"message": "new user added"}
 
-@router.post("/register-admin", dependencies=[Depends(JWTBearer(role="admin"))])
+@router.post("/register-admin", dependencies=[Depends(JWTBearer())])
 async def register_admin(
     body: _BodyLogin,
     role: Literal["admin", "user"],

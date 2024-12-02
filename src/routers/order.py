@@ -9,7 +9,7 @@ class _Body(BaseModel):
     address: str = "41.315166, 69.243769"
     notes:   str = ""
 
-@router.get("/{uid}")
+@router.get("/{uid}", dependencies=[Depends(JWTBearer(role="user"))])
 async def get_orders(uid: int, db: AsyncSession = Depends(db_helper.get_db)):
     orders = await db.scalars(select(Order).filter(Order.uid == uid))
     return {"orders": [
@@ -26,7 +26,7 @@ async def get_orders(uid: int, db: AsyncSession = Depends(db_helper.get_db)):
         for order in orders
     ]}
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(JWTBearer())])
 async def add_order(body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
     if (body.uid or body.pid == 0):
         raise HTTPException(404, "invalid uid or pid")
@@ -42,7 +42,7 @@ async def add_order(body: _Body, db: AsyncSession = Depends(db_helper.get_db)):
     await db.commit()
     return {"message": "order added"}
 
-@router.delete("/{id}")
+@router.delete("/{id}", dependencies=[Depends(JWTBearer())])
 async def delete_order(id: int, db: AsyncSession = Depends(db_helper.get_db)):
     order = await db.scalar(select(Order).filter(Order.id == id))
     if order:
