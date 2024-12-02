@@ -1,4 +1,4 @@
-from fastapi              import FastAPI, Depends
+from fastapi              import FastAPI
 from fastapi.staticfiles  import StaticFiles
 
 from src.core.middlewares import setup_middlewares
