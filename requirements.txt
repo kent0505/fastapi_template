@@ -7,3 +7,6 @@ bcrypt
 python-multipart
 python-dotenv
 alembic
+requests
+beautifulsoup4
+lxml

@@ -9,6 +9,7 @@ from src.routers.test     import router as test_router
 from src.routers.category import router as category_router
 from src.routers.product  import router as product_router
 from src.routers.order    import router as order_router
+from src.routers.parser   import router as parser_router
 
 app = FastAPI(
     lifespan=lifespan,
@@ -25,3 +26,4 @@ app.include_router(category_router, prefix="/api/v1/category", tags=["Category"]
 app.include_router(product_router,  prefix="/api/v1/product",  tags=["Product"])
 app.include_router(order_router,    prefix="/api/v1/order",    tags=["Order"])
 app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"])
+app.include_router(parser_router,   prefix="/api/v1/parser",   tags=["Parser"])
