@@ -1,13 +1,12 @@
 from fastapi                import FastAPI, UploadFile
 from contextlib             import asynccontextmanager
 from dotenv                 import load_dotenv
+from datetime               import datetime, timedelta
 
 from src.database.base      import Base
 from src.database.db_helper import db_helper
 
-import os
-import time
-import logging
+import re, os, time, logging
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,6 +29,23 @@ async def lifespan(app: FastAPI):
 def get_timestamp() -> int:
     timestamp: int = int(time.time())
     return timestamp
+
+def get_yesterday() -> str:
+    date = datetime.now() - timedelta(days=1.5)
+    return date.strftime("%Y%m%d")
+
+def extract_id(text) -> str:
+    match = re.search(r"/id/(\d+)", text)
+    if (match):
+        return f"https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/{match.group(1)}.png&w=100&h=100&scale=crop&cquality=100&location=origin"
+    return ""
+
+def extract_game_id(url: str) -> int | None:
+    match = re.search(r"/gameId/(\d+)", url)
+    return int(match.group(1)) if match else None
+
+def get_coordinates(transform: str) -> str:
+    return transform.replace("transform:translate(", "").replace("px", "").replace(")", "").replace(", ", "x")
 
 def check_picked_file(file: UploadFile) -> bool:
     if file.filename and str(file.content_type).startswith("image/"):

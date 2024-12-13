@@ -22,5 +22,11 @@ class Settings(BaseModel):
     swagger_ui_parameters: dict = {
         "defaultModelsExpandDepth": -1,
     }
+    # parser
+    url: str = "https://www.espn.co.uk/football/fixtures/_/date/"
+    goals_url: str = "https://www.espn.co.uk/football/match/_/gameId/"
+    stats_url: str = "https://www.espn.co.uk/football/matchstats/_/gameId/"
+    lineups_url: str = "https://www.espn.co.uk/football/lineups/_/gameId/"
+    headers: str = {"User-Agent": "Mozilla/5.0"}
 
 settings = Settings()
