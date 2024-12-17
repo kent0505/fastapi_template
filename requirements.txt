@@ -10,3 +10,4 @@ alembic
 aiohttp
 beautifulsoup4
 lxml
+aiogram
