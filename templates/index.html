@@ -5,41 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/templates/icon.png" />
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>Home</title>
+    <title>Clover</title>
 </head>
 <body>
-    <h1>Hello {{ user_id }}</h1>
-
     <div id="user-data" style="margin-top: 20px; font-size: 1.2em;"></div>
 
     <script>
         const tg = window.Telegram.WebApp;
-
-        function isDesktop() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            return userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('linux');
-        }
-
+        const user = tg.initDataUnsafe?.user;
         const userDataDiv = document.getElementById('user-data');
 
-        function displayContent() {
-            if (isDesktop()) {
-                userDataDiv.innerHTML = '<p style="color: red;"><strong>Error:</strong> This page must be opened on a mobile device.</p>';
-            } else {
-                const user = tg.initDataUnsafe?.user;
-                if (user) {
+        if (user) {
+            function displayContent() {
+                const userAgent = navigator.userAgent.toLowerCase();
+                if (userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('linux')) {
+                    userDataDiv.innerHTML = '<p style="color: red;">Error: This page must be opened on a mobile device.</p>';
+                } else {
                     userDataDiv.innerHTML = `
                         <p><strong>User ID:</strong> ${user.id}</p>
                         <p><strong>Username:</strong> ${user.username || "N/A"}</p>
                         <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
                     `;
-                } else {
-                    userDataDiv.innerHTML = '<p>No user information available.</p>';
                 }
             }
-        }
 
-        displayContent();
+            displayContent();
+        }
     </script>
 </body>
 </html>

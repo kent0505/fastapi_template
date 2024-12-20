@@ -1,7 +1,7 @@
 from fastapi                 import FastAPI
 from fastapi.staticfiles     import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
-from src.core.middlewares    import setup_middlewares
 from src.core.utils          import lifespan
 from src.core.settings       import settings
 from src.routers.parser      import router as parser_router
@@ -12,7 +12,13 @@ app = FastAPI(
     swagger_ui_parameters=settings.swagger,
 )
 
-setup_middlewares(app)
+app.add_middleware(
+    middleware_class  = CORSMiddleware,
+    allow_origins     = settings.allow_origins,
+    allow_credentials = True,
+    allow_methods     = ["*"],
+    allow_headers     = ["*"],
+)
 
 app.mount(app=StaticFiles(directory="static"),    path="/static")
 app.mount(app=StaticFiles(directory="templates"), path="/templates")
