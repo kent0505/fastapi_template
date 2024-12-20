@@ -14,9 +14,10 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-
-        document.getElementById('show-user-data').addEventListener('click', () => {
-            const user = tg.initDataUnsafe.user;
+        const userDataDiv = document.getElementById('user-data');
+    
+        function displayUserData() {
+            const user = tg.initDataUnsafe?.user;
             if (user) {
                 userDataDiv.innerHTML = `
                     <p><strong>User ID:</strong> ${user.id}</p>
@@ -26,7 +27,8 @@
             } else {
                 userDataDiv.innerHTML = '<p>No user information available.</p>';
             }
-        });
+        }
+        displayUserData();
     </script>
 </body>
 </html>
