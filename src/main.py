@@ -9,7 +9,7 @@ from src.routers.clover.home import router as clover_home_router
 
 app = FastAPI(
     lifespan=lifespan,
-    swagger_ui_parameters=settings.swagger_ui_parameters,
+    swagger_ui_parameters=settings.swagger,
 )
 
 setup_middlewares(app)

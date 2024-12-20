@@ -1,21 +1,41 @@
 from fastapi           import APIRouter
 from bs4               import BeautifulSoup
+from datetime          import datetime, timedelta
 
-from src.core.utils    import get_yesterday, extract_id, get_coordinates, extract_game_id
-from src.core.settings import settings
+import aiohttp, logging, re
 
-import aiohttp, logging
 
 router = APIRouter()
+
+
+base:        str = "https://www.espn.co.uk/football"
+url:         str = base + "/fixtures/_/date/"
+goals_url:   str = base + "/match/_/gameId/"
+stats_url:   str = base + "/matchstats/_/gameId/"
+lineups_url: str = base + "/lineups/_/gameId/"
+headers:     str = {"User-Agent": "Mozilla/5.0"}
+
+
+def get_yesterday() -> str:
+    date = datetime.now() - timedelta(days=1.5)
+    return date.strftime("%Y%m%d")
+def extract_id(text) -> str:
+    match = re.search(r"/id/(\d+)", text)
+    if (match):
+        return f"https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/{match.group(1)}.png&w=100&h=100&scale=crop&cquality=100&location=origin"
+    return ""
+def extract_game_id(url: str) -> int | None:
+    match = re.search(r"/gameId/(\d+)", url)
+    return int(match.group(1)) if match else None
+def get_coordinates(transform: str) -> str:
+    return transform.replace("transform:translate(", "").replace("px", "").replace(")", "").replace(", ", "x")
+
 
 @router.get("/fixtures")
 async def get_fixtures():
     async with aiohttp.ClientSession() as session:
         yesterday = get_yesterday()
-        async with session.get(
-            settings.url + yesterday, 
-            headers=settings.headers,
-        ) as response:
+        async with session.get(url+yesterday, headers=headers) as response:
             fixtures = []
             if response.status == 200:
                 html = await response.text()
@@ -60,10 +80,7 @@ async def get_fixtures():
 @router.get("/goals/{id}")
 async def get_goals(id: str):
     async with aiohttp.ClientSession() as session:
-        async with session.get(
-            settings.goals_url + id, 
-            headers=settings.headers,
-        ) as response:
+        async with session.get(goals_url+id, headers=headers) as response:
             goals = []
             if response.status == 200:
                 html = await response.text()
@@ -92,10 +109,7 @@ async def get_goals(id: str):
 @router.get("/stats/{id}")
 async def get_stats(id: str):
     async with aiohttp.ClientSession() as session:
-        async with session.get(
-            settings.stats_url + id, 
-            headers=settings.headers,
-        ) as response:
+        async with session.get(stats_url+id, headers=headers) as response:
             stats = []
             if response.status == 200:
                 html = await response.text()
@@ -139,12 +153,8 @@ async def get_lineups(id: str):
             "formation": formation, 
             "players": team,
         }
-
     async with aiohttp.ClientSession() as session:
-        async with session.get(
-            settings.lineups_url + id,
-            headers=settings.headers,
-        ) as response:
+        async with session.get(lineups_url+id, headers=headers) as response:
             lineups = []
             if response.status == 200:
                 html = await response.text()
