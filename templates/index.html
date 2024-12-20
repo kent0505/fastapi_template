@@ -14,21 +14,32 @@
 
     <script>
         const tg = window.Telegram.WebApp;
+
+        function isDesktop() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            return userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('linux');
+        }
+
         const userDataDiv = document.getElementById('user-data');
-    
-        function displayUserData() {
-            const user = tg.initDataUnsafe?.user;
-            if (user) {
-                userDataDiv.innerHTML = `
-                    <p><strong>User ID:</strong> ${user.id}</p>
-                    <p><strong>Username:</strong> ${user.username || "N/A"}</p>
-                    <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
-                `;
+
+        function displayContent() {
+            if (isDesktop()) {
+                userDataDiv.innerHTML = '<p style="color: red;"><strong>Error:</strong> This page must be opened on a mobile device.</p>';
             } else {
-                userDataDiv.innerHTML = '<p>No user information available.</p>';
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    userDataDiv.innerHTML = `
+                        <p><strong>User ID:</strong> ${user.id}</p>
+                        <p><strong>Username:</strong> ${user.username || "N/A"}</p>
+                        <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
+                    `;
+                } else {
+                    userDataDiv.innerHTML = '<p>No user information available.</p>';
+                }
             }
         }
-        displayUserData();
+
+        displayContent();
     </script>
 </body>
 </html>

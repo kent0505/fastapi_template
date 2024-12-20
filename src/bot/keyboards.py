@@ -1,12 +1,12 @@
-from aiogram.types import (
-    # ReplyKeyboardMarkup, 
-    # KeyboardButton,
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-)
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from aiogram.types          import InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-# from src.core.settings import settings
+async def add_play_button():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(InlineKeyboardButton(text="Play", url="https://t.me/otvw_bot/test"))
+    return keyboard.adjust(2).as_markup()
+
+
 
 # main = ReplyKeyboardMarkup(
 #     keyboard=[
@@ -34,10 +34,7 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 #     ],
 # )
 
-async def add_play_button():
-    keyboard = InlineKeyboardBuilder()
-    keyboard.add(InlineKeyboardButton(text="Play", url="https://t.me/otvw_bot/test"))
-    return keyboard.adjust(2).as_markup()
+
 
 
 # ikm2 = InlineKeyboardMarkup(
