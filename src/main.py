@@ -1,15 +1,11 @@
-from fastapi              import FastAPI
-from fastapi.staticfiles  import StaticFiles
+from fastapi                 import FastAPI
+from fastapi.staticfiles     import StaticFiles
 
-from src.core.middlewares import setup_middlewares
-from src.core.utils       import lifespan
-from src.core.settings    import settings
-from src.routers.user     import router as user_router
-from src.routers.test     import router as test_router
-from src.routers.category import router as category_router
-from src.routers.product  import router as product_router
-from src.routers.order    import router as order_router
-from src.routers.parser   import router as parser_router
+from src.core.middlewares    import setup_middlewares
+from src.core.utils          import lifespan
+from src.core.settings       import settings
+from src.routers.parser      import router as parser_router
+from src.routers.clover.home import router as clover_home_router
 
 app = FastAPI(
     lifespan=lifespan,
@@ -21,9 +17,11 @@ setup_middlewares(app)
 app.mount(app=StaticFiles(directory="static"),    path="/static")
 app.mount(app=StaticFiles(directory="templates"), path="/templates")
 
-app.include_router(parser_router,   prefix="/api/v1/parser",   tags=["Parser"])
-app.include_router(user_router,     prefix="/api/v1/user",     tags=["User"])
-app.include_router(category_router, prefix="/api/v1/category", tags=["Category"])
-app.include_router(product_router,  prefix="/api/v1/product",  tags=["Product"])
-app.include_router(order_router,    prefix="/api/v1/order",    tags=["Order"])
-app.include_router(test_router,     prefix="/api/v1/test",     tags=["Test"])
+app.include_router(clover_home_router, include_in_schema=False)
+app.include_router(parser_router, prefix="/api/v1/parser", tags=["Parser"])
+
+# venv\Scripts\activate or source venv/bin/activate
+# pip install -r requirements.txt
+# uvicorn src.main:app --reload
+# alembic revision --autogenerate -m ""
+# alembic upgrade head

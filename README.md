@@ -30,4 +30,4 @@ sqlalchemy.url = sqlite+aiosqlite:///sqlite.db
 ```
 sudo lsof -t -i tcp:8000 | xargs kill -9
 ```
-Команда запуска на timeweb ```uvicorn main:app --host 0.0.0.0```
+Команда запуска на timeweb ```uvicorn src.main:app --host 0.0.0.0 --port 8000```
