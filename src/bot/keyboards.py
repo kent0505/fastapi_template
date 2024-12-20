@@ -22,21 +22,33 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 #     input_field_placeholder="Aaa",
 # )
 
-ikm1 = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text="Play", 
-                url="https://t.me/otvw_bot/test",
-                # web_app=["https://t.me/otvw_bot/test"],
-            ),
-        ],
-    ],
-)
+# ikm1 = InlineKeyboardMarkup(
+#     inline_keyboard=[
+#         [
+#             InlineKeyboardButton(
+#                 text="Play", 
+#                 url="https://t.me/otvw_bot/test",
+#                 # web_app=["https://t.me/otvw_bot/test"],
+#             ),
+#         ],
+#     ],
+# )
 
-async def play_button():
+async def add_play_button():
     keyboard = InlineKeyboardBuilder()
-    keyboard.add(InlineKeyboardButton())
+    keyboard.add(InlineKeyboardButton(
+        text="Play 1",
+        url="https://t.me/otvw_bot/test",
+    ))
+    keyboard.add(InlineKeyboardButton(
+        text="Play 2",
+        url="https://t.me/otvw_bot/test",
+    ))
+    keyboard.add(InlineKeyboardButton(
+        text="Play 3",
+        url="https://t.me/otvw_bot/test",
+    ))
+    return keyboard.adjust(2).as_markup()
 
 
 # ikm2 = InlineKeyboardMarkup(

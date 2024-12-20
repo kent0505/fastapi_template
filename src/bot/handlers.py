@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 # from middlewares import TestMiddleware
 
-import src.bot.keyboards as kb
+from src.bot.keyboards import *
 
 router = Router()
 
@@ -19,8 +19,8 @@ class Reg(StatesGroup):
 @router.message(CommandStart())
 async def cmd_start(message: Message):
     await message.answer(
-        f"Hello {message.from_user.id}", 
-        reply_markup=kb.ikm1
+        text="Hello", 
+        reply_markup=await add_play_button()
     )
 
 @router.message()

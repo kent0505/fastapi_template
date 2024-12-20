@@ -10,28 +10,23 @@
 <body>
     <h1>Hello {{ user_id }}</h1>
 
-    <button id="show-user-data">Show Telegram User Info</button>
+    <div id="user-data" style="margin-top: 20px; font-size: 1.2em;"></div>
 
     <script>
         const tg = window.Telegram.WebApp;
 
-        <!-- tg.initDataUnsafe.user.id
-        tg.initDataUnsafe.user.usernam -->
-
         document.getElementById('show-user-data').addEventListener('click', () => {
             const user = tg.initDataUnsafe.user;
             if (user) {
-                alert(`${user.id}`);
-                alert(`${user.first_name} ${user.last_name}`);
+                userDataDiv.innerHTML = `
+                    <p><strong>User ID:</strong> ${user.id}</p>
+                    <p><strong>Username:</strong> ${user.username || "N/A"}</p>
+                    <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
+                `;
             } else {
-                alert('No user information available.');
+                userDataDiv.innerHTML = '<p>No user information available.</p>';
             }
         });
-
-        // Optionally configure the Web App appearance
-        tg.expand(); // Expand the Web App to full height
-        tg.MainButton.text = "Click Me";
-        tg.MainButton.show(); // Show the main button
     </script>
 </body>
 </html>
