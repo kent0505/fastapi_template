@@ -18,7 +18,10 @@ class Reg(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await message.answer("Hello", reply_markup=kb.ikm1)
+    await message.answer(
+        f"Hello {message.from_user.id}", 
+        reply_markup=kb.ikm1
+    )
 
 @router.message()
 async def cmd_delete(message: Message):
