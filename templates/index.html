@@ -15,17 +15,24 @@
         const user = tg.initDataUnsafe?.user;
         const userDataDiv = document.getElementById('user-data');
 
+        function isMobileDevice() {
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const isSmallScreen = window.innerWidth <= 768;
+            return isTouchDevice && isSmallScreen;
+        }
+
         if (user) {
             function displayContent() {
                 const userAgent = navigator.userAgent.toLowerCase();
-                if (userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('linux')) {
-                    userDataDiv.innerHTML = '<p style="color: red;">Error: This page must be opened on a mobile device.</p>';
-                } else {
+                if (tg.WebApp.isMobileDevice) {
                     userDataDiv.innerHTML = `
-                        <p><strong>User ID:</strong> ${user.id}</p>
-                        <p><strong>Username:</strong> ${user.username || "N/A"}</p>
-                        <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
+                    <p><strong>User ID:</strong> ${user.id}</p>
+                    <p><strong>Username:</strong> ${user.username || "N/A"}</p>
+                    <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
+                    <p><strong>Phone:</strong> ${user.phone} ${user.last_name || ""}</p>
                     `;
+                } else {
+                    userDataDiv.innerHTML = '<p style="color: red;">Error: This page must be opened on a mobile device.</p>';
                 }
             }
 
