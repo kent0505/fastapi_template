@@ -12,6 +12,10 @@ class Base(DeclarativeBase):
 class Test(Base):
     title: Mapped[str] = mapped_column(nullable=False)
 
+# class Quiz(Base):
+#     question: Mapped[str] = mapped_column(nullable=False)
+#     answer: Mapped[str] = mapped_column(nullable=False)
+
 # class User(Base):
 #     userid:    Mapped[int] = mapped_column(nullable=False)
 #     username:  Mapped[str] = mapped_column(nullable=False)
