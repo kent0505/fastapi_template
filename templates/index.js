@@ -35,10 +35,10 @@ if (user) {
         const userAgent = navigator.userAgent.toLowerCase();
         if (isMobileDevice()) {
             userDataDiv.innerHTML = `
-            <p><strong>User ID:</strong> ${user.id}</p>
-            <p><strong>Username:</strong> ${user.username || "N/A"}</p>
-            <p><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
-            <p><strong>Phone:</strong> ${user.phone} ${user.last_name || ""}</p>
+            <p style="color: white;"><strong>User ID:</strong> ${user.id}</p>
+            <p style="color: white;"><strong>Username:</strong> ${user.username || "N/A"}</p>
+            <p style="color: white;"><strong>Name:</strong> ${user.first_name} ${user.last_name || ""}</p>
+            <p style="color: white;"><strong>Phone:</strong> ${user.phone} ${user.last_name || ""}</p>
             `;
         } else {
             userDataDiv.innerHTML = '<p style="color: red;">Error: This page must be opened on a mobile device.</p>';
