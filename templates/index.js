@@ -10,7 +10,7 @@ function increment() {
 }
 
 function updateCounter() {
-    document.getElementById('counter').textContent = count;
+    document.getElementById('counter').textContent = count.toLocaleString();;
 }
 
 function isMobileDevice() {

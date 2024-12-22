@@ -1,5 +1,41 @@
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-light.otf') format('opentype');
+    font-weight: 300;
+}
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-regular.ttf') format('opentype');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-medium.otf') format('opentype');
+    font-weight: 500;
+}
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-semibold.otf') format('opentype');
+    font-weight: 600;
+}
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-bold.otf') format('opentype');
+    font-weight: 700;
+}
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-heavy.otf') format('opentype');
+    font-weight: 800;
+}
+@font-face {
+    font-family: 'sf';
+    src: url('/templates/sf-ui-display-black.otf') format('opentype');
+    font-weight: 900;
+}
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'sf';
+    font-weight: 400;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,22 +46,19 @@ body {
 }
 .clicker-app {
     text-align: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .counter {
     font-size: 48px;
-    margin: 20px 0;
+    margin: 50px 0;
+    font-weight: 700;
+    color: white;
+    -webkit-text-stroke: 2px #263F68;
 }
 .click-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    cursor: pointer;
+    width: 327px;
+    height: 327px;
     transition: transform 0.2s ease;
 }
 .click-image:active {
     transform: scale(0.9);
-}
+}     
