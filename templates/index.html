@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/templates/icon.png" />
+    <link rel="icon" type="image/png" href="/templates/icon1.png" />
+    <link rel="stylesheet" href="/templates/styles.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Clover</title>
 </head>
 <body>
     <div id="user-data" style="margin-top: 20px; font-size: 1.2em;"></div>
+
+    <div class="clicker-app">
+        <div class="counter" id="counter">0</div>
+        <img 
+            src="/templates/icon1.png" 
+            alt="Clicker Image" 
+            class="click-image" 
+            onclick="increment()"
+        />
+    </div>
 
     <script src="/templates/index.js"></script>
 </body>
