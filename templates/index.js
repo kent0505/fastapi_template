@@ -14,6 +14,9 @@ image.addEventListener('touchend', () => {
 image.addEventListener('touchmove', (e) => {
     e.preventDefault();
 });
+document.addEventListener('selectstart', (e) => {
+    e.preventDefault();
+});
 
 function increment() {
     count++;

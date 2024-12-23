@@ -34,15 +34,20 @@
     font-weight: 900;
 }
 body {
+    height: 100%; /* Set both html and body to 100% height */
+    margin: 0;    /* Remove default margin */
+    overflow: hidden; /* Prevent scrolling */
     font-family: 'sf';
     font-weight: 400;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
     background: url('/templates/bg1.png') no-repeat center center fixed;
     background-size: cover;
+    -webkit-user-select: none; /* Safari and Chrome */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;
 }
 .clicker-app {
     text-align: center;
