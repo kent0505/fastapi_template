@@ -4,6 +4,17 @@ const userDataDiv = document.getElementById('user-data');
 
 let count = 0;
 
+const image = document.querySelector('.click-image');
+image.addEventListener('touchstart', () => {
+    image.style.transform = 'scale(0.9)';
+});
+image.addEventListener('touchend', () => {
+    image.style.transform = 'scale(1)';
+});
+image.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+});
+
 function increment() {
     count++;
     updateCounter();
@@ -43,7 +54,6 @@ function isMobileDevice() {
 
 if (user) {
     function displayContent() {
-        const userAgent = navigator.userAgent.toLowerCase();
         if (isMobileDevice()) {
             userDataDiv.innerHTML = `
             <p style="color: white;"><strong>User ID:</strong> ${user.id}</p>

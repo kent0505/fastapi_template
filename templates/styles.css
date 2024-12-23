@@ -58,7 +58,16 @@ body {
     width: 327px;
     height: 327px;
     transition: transform 0.2s ease;
+    cursor: pointer;
 }
 .click-image:active {
-    transform: scale(0.9);
-}     
+    animation: scaleDown 0.2s forwards;
+}
+@keyframes scaleDown {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.9);
+    }
+}
