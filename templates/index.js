@@ -18,14 +18,21 @@ document.addEventListener('selectstart', (e) => {
     e.preventDefault();
 });
 
-function increment() {
-    count++;
+function increment(amount) {
+    count += amount;
     updateCounter();
 }
 
 function updateCounter() {
     document.getElementById('counter').textContent = count.toLocaleString();;
 }
+
+const imageElement = document.getElementById('click-image');
+
+imageElement.addEventListener('touchstart', (event) => {
+    const touchCount = event.touches.length; // Number of fingers touching
+    increment(touchCount); // Increment by the number of touches
+});
 
 function isMobileDevice() {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
